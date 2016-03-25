@@ -1,0 +1,46 @@
+//file input
+$(document).ready(function () {
+    (function($){
+        $('input[type=file]', 'body').each(function (index, element) {
+                var obj = $(element);
+
+                if (!obj.hasClass('wrappedItem')){
+
+                    obj.addClass('wrappedItem');
+                    obj.hide();
+                    obj.wrap('<div class="block-file-input"></div>');
+                    var append = $('<span class="file-type-label">To attach a file:</span><div class="file-type-name">The file is not selected</div>');
+                    obj.after(append);
+                    append.data('target', obj);
+                    append.on('click', function (e) {
+                        var obj = $(e.target);
+
+                        var parent = obj.parents('.block-file-input');
+                        if (obj.is('.file-type-label,.file-type-name')) {
+                            parent.find('input').click();
+                        } else if (obj.is('span')) {
+                            parent.find('input').val('');
+                            parent.find('.file-type-name').css('opacity', '0').html('')
+                        }
+                    });
+                    //input change
+                    obj.on('change', function (e) {
+                        var obj = $(e.target);
+                        var file_name_div = obj.parents('.block-file-input').find('.file-type-name');
+                        var name_result = obj.val().replace(/\\/g, "\\$&").split('\\');
+                        var name = name_result[name_result.length - 1];
+                        if (name) {
+                            file_name_div.css('opacity', '1').html(name).append('<span></span>');
+                        } else {
+                            file_name_div.css('opacity', '0').html('');
+                        }
+                    });
+
+                }
+
+                //end input click
+            }
+        );
+
+    })(jQuery);
+});
